@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import Link from "next/link";
 import {useEffect, useState} from 'react'
+import Footer from '../components/Footer'
+
 
 export default function Home(initialData: any) {
   const [formInputs, setFormInputs] = useState()
@@ -60,7 +62,8 @@ export default function Home(initialData: any) {
           )
         })}
       </div>
-      
+      <Footer/>
+
     </div>
   )
 }
