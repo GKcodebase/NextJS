@@ -1,23 +1,24 @@
 import Head from 'next/head'
+import Link from "next/link";
 import {useEffect, useState} from 'react'
 
 export default function Home(initialData: any) {
   const [formInputs, setFormInputs] = useState()
-  const [searchTerm, setSearchTerm] = useState('women')
+  const [searchTerm, setSearchTerm] = useState('cats')
   const [searchResults, setSearchResults] = useState([])
 
   useEffect(()=>{
     setSearchResults(initialData.catGiphys.data)
   }, [initialData])
 
-  const handleInputs = (event: { target: { name: any; value: any } }) => {
+  const handleInputs = (event: { target: { name: any; value: any; }; }) => {
     let {name, value} = event.target
     setFormInputs({ ...formInputs, [name]: value });
   }
 
-  const search = async (event: { preventDefault: () => void }) => {
+  const search = async (event: { preventDefault: () => void; }) => {
     event.preventDefault()
-    let giphys = await fetch(`https://api.giphy.com/v1/gifs/search?q=${formInputs.searchTerm}&api_key=nPJNlVceWHERWCSDBW5XMo1p90l7l9ie&limit=12`)
+    let giphys = await fetch(`https://api.giphy.com/v1/gifs/search?q=${formInputs.searchTerm}&api_key=nPJNlVceWHERWCSDBW5XMo1p90l7l9ie&limit=6`)
     giphys = await giphys.json()
     setSearchResults(giphys.data)
     setSearchTerm(formInputs.searchTerm)
@@ -26,12 +27,12 @@ export default function Home(initialData: any) {
   return (
     <div className='container'>
       <Head>
-        <title>giphy browser</title>
+        <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href="/styles.css"/>
       </Head>
 
-      <h1>My Giphy Search Engine</h1>
+      <h1>Giphy Search App</h1>
 
       <form onSubmit={search}>
         <input name="searchTerm" onChange={handleInputs} type="text" required />
@@ -39,6 +40,15 @@ export default function Home(initialData: any) {
       </form>
 
       <h1>Search results for: {searchTerm}</h1>
+
+      <p>Share this search with others:
+        
+      <Link
+            href={`http://localhost:3000/search/${searchTerm}`}
+            >
+      </Link>
+     
+        </p>
 
       <div className="giphy-search-results-grid">
         {searchResults.map((each, index) => {
@@ -56,7 +66,7 @@ export default function Home(initialData: any) {
 }
 
 export async function getStaticProps() {
-  let catGiphys = await fetch('https://api.giphy.com/v1/gifs/search?q=women&api_key=nPJNlVceWHERWCSDBW5XMo1p90l7l9ie&limit=12')
+  let catGiphys = await fetch('https://api.giphy.com/v1/gifs/search?q=cats&api_key=nPJNlVceWHERWCSDBW5XMo1p90l7l9ie&limit=6')
   catGiphys = await catGiphys.json()
   return {props: {catGiphys: catGiphys}}  
 }
