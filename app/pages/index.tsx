@@ -3,8 +3,7 @@ import Link from "next/link";
 import {useEffect, useState} from 'react'
 import Footer from '../components/Footer'
 
-
-export default function Home(initialData: any) {
+export default function Home(initialData) {
   const [formInputs, setFormInputs] = useState()
   const [searchTerm, setSearchTerm] = useState('cats')
   const [searchResults, setSearchResults] = useState([])
@@ -13,12 +12,12 @@ export default function Home(initialData: any) {
     setSearchResults(initialData.catGiphys.data)
   }, [initialData])
 
-  const handleInputs = (event: { target: { name: any; value: any; }; }) => {
+  const handleInputs = (event) => {
     let {name, value} = event.target
     setFormInputs({ ...formInputs, [name]: value });
   }
 
-  const search = async (event: { preventDefault: () => void; }) => {
+  const search = async (event) => {
     event.preventDefault()
     let giphys = await fetch(`https://api.giphy.com/v1/gifs/search?q=${formInputs.searchTerm}&api_key=nPJNlVceWHERWCSDBW5XMo1p90l7l9ie&limit=6`)
     giphys = await giphys.json()
@@ -27,9 +26,11 @@ export default function Home(initialData: any) {
   }
 
   return (
+    <>
     <div className='container'>
       <Head>
-        <title>Create Next App</title>
+        <title>Giphy Search App</title>
+        <meta name="description" content="Love giphys? We do too. Use our advanced giphy search to find the perfect giphy for any occasion"></meta>
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href="/styles.css"/>
       </Head>
@@ -46,8 +47,11 @@ export default function Home(initialData: any) {
       <p>Share this search with others:
         
       <Link
-            href={`http://localhost:3000/search/${searchTerm}`}
-            >
+            href="/search/[pid]"
+            as={`/search/${searchTerm}`}>
+              
+                {`http://localhost:3000/search/${searchTerm}`}
+              
       </Link>
      
         </p>
@@ -62,9 +66,10 @@ export default function Home(initialData: any) {
           )
         })}
       </div>
-      <Footer/>
-
+      
     </div>
+    <Footer />
+    </>
   )
 }
 
